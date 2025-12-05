@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Courses & Classrooms – Smart Attendance</title>
+  <link rel="stylesheet" href="courses.css" />
+
+  <style>
+    /* ————————————————
+       ADD COURSE POPUP MODAL
+    ———————————————— */
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal {
+      width: 420px;
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h3 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .modal-label {
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 14px;
+      display: block;
+      color: #444;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 14px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .btn-cancel {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #ddd;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-add {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #a30569;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="dash-root">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="assets/maltepe_logo.png" alt="Maltepe University" class="sidebar-logo" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <a href="dashboard.html" class="menu-item">Dashboard</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <a href="courses.html" class="menu-item active">Courses &amp; Classrooms</a>
+          <a href="cameras.html" class="menu-item">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <a href="reports.html" class="menu-item">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <header class="topbar">
+        <h1 class="topbar-title">Courses &amp; Classrooms</h1>
+
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar-circle"><span>T</span></div>
+            <span class="teacher-name">Teacher Name</span>
+          </div>
+          <button class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <main class="content-wrapper">
+        <div class="content-card">
+
+          <!-- HEADER -->
+          <section class="page-header">
+            <div>
+              <h2>Course &amp; Classroom Management</h2>
+              <p>Define courses, assign classrooms and manage weekly schedules.</p>
+            </div>
+
+            <div class="header-controls">
+              <div class="select-pill">
+                <span>Semester: 2024–2025 Spring</span>
+                <span class="select-arrow">▾</span>
+              </div>
+
+              <!-- ADD COURSE BUTTON (POPUP AÇAR) -->
+              <button class="btn-outline-pink" id="openAddCourse">Add Course</button>
+
+              <button class="btn-grey">Add Classroom</button>
+            </div>
+          </section>
+
+          <!-- ……………………………………… 
+               DİĞER TÜM SAYFA (AYNEN SENDEKİ)
+               ……………………………………… -->
+          
+          <!-- ANA GRID -->
+          <div class="courses-grid">
+            <!-- Burayı değiştirmiyorum. Sende nasılsa aynen devam ediyor. -->
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ————————————————
+       ADD COURSE POPUP MODALI
+  ———————————————— -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Add New Course</h3>
+
+      <label class="modal-label">Course Code</label>
+      <input class="modal-input" type="text" placeholder="e.g., CS101" />
+
+      <label class="modal-label">Course Name</label>
+      <input class="modal-input" type="text" placeholder="e.g., Introduction to Programming" />
+
+      <label class="modal-label">Classroom</label>
+      <input class="modal-input" type="text" placeholder="e.g., A-201" />
+
+      <label class="modal-label">Sessions / Week</label>
+      <input class="modal-input" type="number" placeholder="2" />
+
+      <div class="modal-buttons">
+        <button class="btn-cancel" id="closeModal">Cancel</button>
+        <button class="btn-add">Add Course</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ————————————————
+       JS: Popup Aç/Kapat
+  ———————————————— -->
+  <script>
+    const modal = document.getElementById("modalOverlay");
+    const openBtn = document.getElementById("openAddCourse");
+    const closeBtn = document.getElementById("closeModal");
+
+    openBtn.onclick = () => { modal.style.display = "flex"; };
+    closeBtn.onclick = () => { modal.style.display = "none"; };
+    modal.onclick = (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    };
+  </script>
+
+</body>
+</html>

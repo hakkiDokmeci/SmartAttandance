@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reports & Semester Archive – Smart Attendance</title>
+  <link rel="stylesheet" href="reports.css" />
+</head>
+<body>
+  <div class="dash-root">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="assets/maltepe_logo.png" alt="Maltepe University" class="sidebar-logo" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <!-- BURADA LİNKLERİ DÜZELTTİM -->
+          <a href="dashboard.html" class="menu-item">Dashboard</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <a href="courses.html" class="menu-item">Courses &amp; Classrooms</a>
+          <a href="cameras.html" class="menu-item">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <!-- Reports aktif sayfa -->
+          <a href="reports.html" class="menu-item active">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Reports &amp; Semester Archive</h1>
+
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar-circle">
+              <span>T</span>
+            </div>
+            <span class="teacher-name">Teacher Name</span>
+          </div>
+          <button class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="content-wrapper">
+        <div class="content-card">
+
+          <!-- HEADER + FİLTRELER -->
+          <section class="reports-header">
+            <div>
+              <h2>Attendance Reports</h2>
+              <p>View and export course-level and student-level attendance summaries.</p>
+            </div>
+
+            <div class="filter-row">
+              <div class="select-pill">
+                <span>Course: CS101</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <div class="select-pill">
+                <span>Semester: 2024–2025 Spring</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <div class="select-pill">
+                <span>View: By Student</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <button class="btn-outline-pink">Export CSV</button>
+              <button class="btn-grey">Download PDF</button>
+            </div>
+          </section>
+
+          <!-- ANA GRID: SOL ÖZET, SAĞ GRAFİK -->
+          <div class="reports-grid">
+            <!-- SOL KISIM: ÖZET KUTULAR -->
+            <section class="summary-column">
+              <div class="summary-card">
+                <h3>Overall Attendance</h3>
+                <p class="summary-value">89%</p>
+                <p class="summary-caption">Average attendance rate for selected course &amp; semester.</p>
+                <div class="summary-bars">
+                  <div class="bar-row">
+                    <span>Present</span>
+                    <div class="bar-wrap">
+                      <div class="bar bar-present"></div>
+                    </div>
+                    <span class="bar-value">89%</span>
+                  </div>
+                  <div class="bar-row">
+                    <span>Late</span>
+                    <div class="bar-wrap">
+                      <div class="bar bar-late"></div>
+                    </div>
+                    <span class="bar-value">6%</span>
+                  </div>
+                  <div class="bar-row">
+                    <span>Absent</span>
+                    <div class="bar-wrap">
+                      <div class="bar bar-absent"></div>
+                    </div>
+                    <span class="bar-value">5%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <h3>At-risk Students</h3>
+                <p class="summary-caption">
+                  Students below the minimum required attendance threshold.
+                </p>
+                <ul class="risk-list">
+                  <li>
+                    <span class="risk-name">Student A</span>
+                    <span class="risk-percent">64%</span>
+                  </li>
+                  <li>
+                    <span class="risk-name">Student B</span>
+                    <span class="risk-percent">68%</span>
+                  </li>
+                  <li>
+                    <span class="risk-name">Student C</span>
+                    <span class="risk-percent">70%</span>
+                  </li>
+                </ul>
+                <p class="risk-note">Threshold: 70% minimum attendance.</p>
+              </div>
+            </section>
+
+            <!-- SAĞ KISIM: GRAFİK + TABLO -->
+            <section class="detail-column">
+              <!-- Grafik placeholder kartı -->
+              <div class="chart-card">
+                <header class="chart-header">
+                  <h3>Weekly Attendance Trend</h3>
+                  <p>Attendance percentage per week for the selected course.</p>
+                </header>
+                <div class="chart-placeholder">
+                  <div class="chart-lines">
+                    <div class="chart-line"></div>
+                    <div class="chart-line"></div>
+                    <div class="chart-line"></div>
+                  </div>
+                  <div class="chart-footer">
+                    <span>Week 1</span>
+                    <span>Week 4</span>
+                    <span>Week 8</span>
+                    <span>Week 12</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tablo kartı -->
+              <div class="table-card">
+                <header class="table-header">
+                  <h3>Student Attendance Detail</h3>
+                  <p>Each row shows cumulative attendance for this course.</p>
+                </header>
+
+                <div class="table-head-row">
+                  <span class="col-name">Student</span>
+                  <span class="col-id">Student ID</span>
+                  <span class="col-percent">Attendance</span>
+                  <span class="col-status">Status</span>
+                </div>
+
+                <div class="table-row">
+                  <span class="col-name">Hakkı Dökmeci</span>
+                  <span class="col-id">220706026</span>
+                  <span class="col-percent">96%</span>
+                  <span class="col-status">
+                    <span class="status-pill good">On Track</span>
+                  </span>
+                </div>
+
+                <div class="table-row">
+                  <span class="col-name">Berkay Aksoy</span>
+                  <span class="col-id">220706027</span>
+                  <span class="col-percent">92%</span>
+                  <span class="col-status">
+                    <span class="status-pill good">On Track</span>
+                  </span>
+                </div>
+
+                <div class="table-row">
+                  <span class="col-name">Student A</span>
+                  <span class="col-id">220706010</span>
+                  <span class="col-percent">68%</span>
+                  <span class="col-status">
+                    <span class="status-pill warning">At Risk</span>
+                  </span>
+                </div>
+
+                <div class="table-row">
+                  <span class="col-name">Student B</span>
+                  <span class="col-id">220706011</span>
+                  <span class="col-percent">64%</span>
+                  <span class="col-status">
+                    <span class="status-pill danger">Critical</span>
+                  </span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <p class="tip-text">
+            Tip: Use the export options above to share attendance summaries with department coordinators.
+          </p>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teacher Dashboard – Smart Attendance</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+  <div class="dash-root">
+
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="assets/maltepe_logo.png" alt="Maltepe University" class="sidebar-logo" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <a href="dashboard.html" class="menu-item active">Dashboard</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <a href="courses.html" class="menu-item">Courses &amp; Classrooms</a>
+          <a href="cameras.html" class="menu-item">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <a href="reports.html" class="menu-item">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="topbar">
+        <h1 class="topbar-title">Teacher Dashboard</h1>
+
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar-circle">
+              <span>E</span>
+            </div>
+            <span class="teacher-name">Emre Olca</span>
+          </div>
+          <button class="btn-logout" onclick="window.location.href='login.html'">Logout</button>
+        </div>
+      </header>
+
+      <main class="content-wrapper">
+        <div class="content-card">
+
+          <div class="card-row">
+            <section class="card card-small">
+              <header class="card-header">
+                <div>
+                  <h2>Student Registration</h2>
+                  <p>Add new students and upload photos</p>
+                </div>
+                <div class="card-icon-circle">+</div>
+              </header>
+
+              <div class="card-footer">
+                <button class="btn-white" onclick="window.location.href='students.html'">New Student</button>
+              </div>
+            </section>
+
+            <section class="card card-small">
+              <header class="card-header">
+                <div>
+                  <h2>Courses &amp; Classrooms</h2>
+                  <p>Manage courses and classroom assignment</p>
+                </div>
+                <div class="card-icon-circle card-icon-menu">
+                  <span></span><span></span><span></span>
+                </div>
+              </header>
+
+              <div class="card-footer">
+                <button class="btn-white" onclick="window.location.href='courses.html'">Open Course List</button>
+              </div>
+            </section>
+
+            <section class="card card-small">
+              <header class="card-header">
+                <div>
+                  <h2>Camera &amp; Classroom Setup</h2>
+                  <p>Link cameras to classrooms</p>
+                </div>
+                <div class="card-icon-circle card-icon-camera">
+                  <div class="cam-body"></div>
+                  <div class="cam-dot"></div>
+                </div>
+              </header>
+
+              <div class="card-footer">
+                <button class="btn-white" onclick="window.location.href='cameras.html'">Open Camera Panel</button>
+              </div>
+            </section>
+          </div>
+
+          <div class="card-row card-row-bottom">
+            <section class="card card-large">
+              <header class="card-header">
+                <div>
+                  <h2>Attendance Session &amp; Recognition</h2>
+                  <p>Select course and classroom, then start automatic attendance</p>
+                </div>
+              </header>
+
+              <div class="filter-row">
+                <div class="filter-pill">Course: CS101</div>
+                <div class="filter-pill">Classroom: A-201</div>
+                <button class="btn-white start-btn" onclick="window.location.href='sessions.html'">Start Attendance Session</button>
+              </div>
+
+              <div class="attendance-body">
+                <div class="preview-box">
+                  Camera preview / live feed
+                </div>
+                <div class="live-box">
+                  <h3>Live Attendance</h3>
+                  <ul>
+                    <li>Hakkı Dökmeci — Present</li>
+                    <li>Berkay Aksoy — Present</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <section class="card card-medium">
+              <header class="card-header">
+                <div>
+                  <h2>Reports &amp; Semester Archive</h2>
+                  <p>View attendance reports by course and student</p>
+                </div>
+              </header>
+
+              <div class="reports-body">
+                <div class="report-line line-1"></div>
+                <div class="report-line line-2"></div>
+                <div class="report-line line-3"></div>
+
+                <div class="report-text">
+                  <p>CS101 — 92% average attendance</p>
+                  <p>MAT102 — 85% average attendance</p>
+                </div>
+
+                <button class="btn-white reports-btn" onclick="window.location.href='reports.html'">Open Reports</button>
+              </div>
+            </section>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

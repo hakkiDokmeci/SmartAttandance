@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Camera & Classroom Setup – Smart Attendance</title>
+  <link rel="stylesheet" href="cameras.css" />
+</head>
+<body>
+  <div class="dash-root">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="assets/maltepe_logo.png" alt="Maltepe University" class="sidebar-logo" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <!-- BURADAKİ LİNKLERİ DÜZELTTİM -->
+          <a href="dashboard.html" class="menu-item">Dashboard</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <a href="courses.html" class="menu-item">Courses &amp; Classrooms</a>
+          <!-- Cameras aktif -->
+          <a href="cameras.html" class="menu-item active">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <a href="reports.html" class="menu-item">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Camera &amp; Classroom Setup</h1>
+
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar-circle">
+              <span>T</span>
+            </div>
+            <span class="teacher-name">Teacher Name</span>
+          </div>
+          <button class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="content-wrapper">
+        <div class="content-card">
+
+          <!-- ÜST: Mapping bar -->
+          <section class="mapping-header">
+            <div>
+              <h2>Camera &amp; Classroom Mapping</h2>
+              <p>Link classroom cameras, monitor status and test connections.</p>
+            </div>
+
+            <div class="mapping-controls">
+              <div class="select-pill">
+                <span>Course: CS101</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <div class="select-pill">
+                <span>Classroom: A-201</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <button class="btn-outline-pink">Add Camera</button>
+              <button class="btn-grey">Refresh Status</button>
+            </div>
+          </section>
+
+          <!-- ALT: 2 kolonlu layout -->
+          <div class="cam-layout">
+            <!-- SOL: Camera listesi -->
+            <section class="cam-list-card">
+              <header class="section-header">
+                <h3>Cameras</h3>
+                <p>Active cameras linked to classrooms</p>
+              </header>
+
+              <!-- Tablo başlıkları -->
+              <div class="cam-table-header">
+                <span class="col-id">Camera ID</span>
+                <span class="col-room">Classroom</span>
+                <span class="col-status">Status</span>
+                <span class="col-ping">Last Ping</span>
+              </div>
+
+              <!-- Satır 1 (seçili) -->
+              <div class="cam-row cam-row-active">
+                <span class="col-id">CAM-01</span>
+                <span class="col-room">A-201</span>
+                <span class="col-status">
+                  <span class="status-pill online">
+                    <span class="dot"></span>Online
+                  </span>
+                </span>
+                <span class="col-ping">30 sec ago</span>
+              </div>
+
+              <!-- Satır 2 -->
+              <div class="cam-row">
+                <span class="col-id">CAM-02</span>
+                <span class="col-room">B-105</span>
+                <span class="col-status">
+                  <span class="status-pill offline">
+                    <span class="dot"></span>Offline
+                  </span>
+                </span>
+                <span class="col-ping">12 min ago</span>
+              </div>
+
+              <!-- Satır 3 -->
+              <div class="cam-row">
+                <span class="col-id">CAM-03</span>
+                <span class="col-room">Lab-1</span>
+                <span class="col-status">
+                  <span class="status-pill online">
+                    <span class="dot"></span>Online
+                  </span>
+                </span>
+                <span class="col-ping">5 min ago</span>
+              </div>
+            </section>
+
+            <!-- SAĞ: Seçili camera detayı -->
+            <section class="cam-detail-card">
+              <header class="section-header detail-header">
+                <div>
+                  <h3>Selected Camera: CAM-01</h3>
+                  <p>Classroom A-201 · IP 10.0.0.21 · Status Online</p>
+                </div>
+                <div class="detail-actions">
+                  <button class="btn-grey-small">Edit</button>
+                  <button class="btn-red-small">Remove</button>
+                </div>
+              </header>
+
+              <!-- Live preview -->
+              <div class="preview-wrapper">
+                <div class="live-badge">LIVE</div>
+                <div class="preview-area">
+                  <div class="preview-icon"></div>
+                  <span class="preview-text">Live camera preview (placeholder)</span>
+                </div>
+              </div>
+
+              <!-- Alt butonlar -->
+              <div class="detail-buttons">
+                <button class="btn-outline-pink wide">Test Connection</button>
+                <button class="btn-solid-pink wide">Reassign Classroom</button>
+                <button class="btn-grey wide">Open Fullscreen</button>
+              </div>
+
+              <!-- Connection log -->
+              <div class="log-section">
+                <h4>Connection Log</h4>
+                <div class="log-box">
+                  <pre>
+[12:32:10] Ping OK — 45 ms
+[12:31:48] Stream initialized for CAM-01 (A-201)
+[12:30:02] Camera CAM-01 selected by Teacher Name
+                  </pre>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <p class="tip-text">
+            Tip: Make sure each classroom has exactly one primary camera linked before starting an attendance session.
+          </p>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
