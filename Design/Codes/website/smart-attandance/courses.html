@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Courses & Classrooms – Smart Attendance</title>
+  <link rel="stylesheet" href="courses.css" />
+
+  <!-- Add Course popup için ek CSS -->
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal {
+      width: 420px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      animation: fadeIn 0.25s ease-out;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h3 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 16px;
+    }
+
+    .modal-label {
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 14px;
+      display: block;
+      color: #444;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 14px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .btn-cancel {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #e0e0e0;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-add {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #a30569;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="dash-root">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="assets/maltepe_logo.png" alt="Maltepe University" class="sidebar-logo" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <a href="dashboard.html" class="menu-item">Dashboard</a>
+          <a href="teachers.html" class="nav-item">Teachers</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <!-- Courses aktif -->
+          <a href="courses.html" class="menu-item active">Courses &amp; Classrooms</a>
+          <a href="cameras.html" class="menu-item">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <a href="reports.html" class="menu-item">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Courses &amp; Classrooms</h1>
+
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar-circle">
+              <span>T</span>
+            </div>
+            <span class="teacher-name">Teacher Name</span>
+          </div>
+          <button class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="content-wrapper">
+        <div class="content-card">
+
+          <!-- HEADER + FİLTRELER -->
+          <section class="page-header">
+            <div>
+              <h2>Course &amp; Classroom Management</h2>
+              <p>Define courses, assign classrooms and manage weekly schedules.</p>
+            </div>
+
+            <div class="header-controls">
+              <div class="select-pill">
+                <span>Semester: 2024–2025 Spring</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <!-- Add Course popup'ı açan buton -->
+              <button class="btn-outline-pink" id="openAddCourse">Add Course</button>
+              <button class="btn-grey">Add Classroom</button>
+            </div>
+          </section>
+
+          <!-- ANA GRID: SOL COURSES, SAĞ DETAILS -->
+          <div class="courses-grid">
+            <!-- SOL: COURSE LİSTESİ -->
+            <section class="course-list-card">
+              <header class="section-header">
+                <h3>Courses</h3>
+                <p>Your active courses for this semester.</p>
+              </header>
+
+              <!-- Arama -->
+              <div class="search-row">
+                <input
+                  type="text"
+                  class="search-input"
+                  placeholder="Search by course code or name..."
+                />
+              </div>
+
+              <!-- Tablo başlıkları -->
+              <div class="course-table-header">
+                <span class="col-code">Code</span>
+                <span class="col-name">Course Name</span>
+                <span class="col-classroom">Classroom</span>
+                <span class="col-sessions">Sessions/Week</span>
+              </div>
+
+              <!-- Satırlar -->
+              <div class="course-row course-row-active">
+                <span class="col-code">CS101</span>
+                <span class="col-name">Introduction to Programming</span>
+                <span class="col-classroom">A-201</span>
+                <span class="col-sessions">2</span>
+              </div>
+
+              <div class="course-row">
+                <span class="col-code">SE342</span>
+                <span class="col-name">Software Validation &amp; Testing</span>
+                <span class="col-classroom">B-105</span>
+                <span class="col-sessions">1</span>
+              </div>
+
+              <div class="course-row">
+                <span class="col-code">MAT102</span>
+                <span class="col-name">Calculus II</span>
+                <span class="col-classroom">Lab-1</span>
+                <span class="col-sessions">2</span>
+              </div>
+
+              <div class="course-row">
+                <span class="col-code">AI220</span>
+                <span class="col-name">Introduction to AI</span>
+                <span class="col-classroom">C-301</span>
+                <span class="col-sessions">1</span>
+              </div>
+            </section>
+
+            <!-- SAĞ: SEÇİLEN COURSE DETAY -->
+            <section class="course-detail-card">
+              <header class="section-header detail-header">
+                <div>
+                  <h3>Selected Course: CS101 – Introduction to Programming</h3>
+                  <p>Department of Computer Engineering · 3 credits · 2 sessions / week</p>
+                </div>
+                <div class="detail-actions">
+                  <button class="btn-grey-small">Edit Course</button>
+                  <button class="btn-red-small">Remove</button>
+                </div>
+              </header>
+
+              <!-- Classroom Assignment -->
+              <div class="detail-block">
+                <div class="block-header">
+                  <h4>Classroom Assignment</h4>
+                  <button class="link-button">Change Classroom</button>
+                </div>
+                <div class="assignment-pill">
+                  <span class="label">Primary Classroom</span>
+                  <span class="value">A-201</span>
+                  <span class="meta">Capacity: 40 · Linked camera: CAM-01</span>
+                </div>
+              </div>
+
+              <!-- Weekly Schedule -->
+              <div class="detail-block">
+                <div class="block-header">
+                  <h4>Weekly Schedule</h4>
+                  <button class="link-button">Edit Slots</button>
+                </div>
+
+                <div class="schedule-grid">
+                  <div class="day-col">
+                    <div class="day-label">Monday</div>
+                    <div class="slot-pill active">
+                      09:00–10:50 · A-201
+                    </div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Tuesday</div>
+                    <div class="slot-pill muted">No session</div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Wednesday</div>
+                    <div class="slot-pill active">
+                      13:00–13:50 · A-201
+                    </div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Thursday</div>
+                    <div class="slot-pill muted">No session</div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Friday</div>
+                    <div class="slot-pill muted">No session</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Enrollment Summary -->
+              <div class="detail-block">
+                <div class="block-header">
+                  <h4>Enrollment Summary</h4>
+                  <button class="link-button">View Student List</button>
+                </div>
+
+                <div class="enrollment-row">
+                  <div class="enrollment-card">
+                    <span class="label">Enrolled Students</span>
+                    <span class="value">32</span>
+                  </div>
+                  <div class="enrollment-card">
+                    <span class="label">Max Capacity</span>
+                    <span class="value">40</span>
+                  </div>
+                  <div class="enrollment-card">
+                    <span class="label">Average Attendance</span>
+                    <span class="value highlight">92%</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <p class="tip-text">
+            Tip: Make sure each course has a valid classroom and schedule before creating attendance sessions.
+          </p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ADD COURSE POPUP MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h3>Add New Course</h3>
+
+      <label class="modal-label">Course Code</label>
+      <input class="modal-input" type="text" placeholder="e.g., CS101" />
+
+      <label class="modal-label">Course Name</label>
+      <input class="modal-input" type="text" placeholder="e.g., Introduction to Programming" />
+
+      <label class="modal-label">Classroom</label>
+      <input class="modal-input" type="text" placeholder="e.g., A-201" />
+
+      <label class="modal-label">Sessions / Week</label>
+      <input class="modal-input" type="number" placeholder="2" />
+
+      <div class="modal-buttons">
+        <button class="btn-cancel" id="closeModal">Cancel</button>
+        <button class="btn-add">Add Course</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS: Popup Aç/Kapat -->
+  <script>
+    const modal = document.getElementById("modalOverlay");
+    const openBtn = document.getElementById("openAddCourse");
+    const closeBtn = document.getElementById("closeModal");
+
+    openBtn.onclick = () => { modal.style.display = "flex"; };
+    closeBtn.onclick = () => { modal.style.display = "none"; };
+    modal.onclick = (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    };
+  </script>
+</body>
+</html>

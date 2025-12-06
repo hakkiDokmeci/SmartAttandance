@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Attendance Sessions – Smart Attendance Portal</title>
+  <link rel="stylesheet" href="sessions.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo-bar">
+        <img src="assets/maltepe_logo.png"
+             alt="Maltepe University Logo"
+             class="sidebar-logo">
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="sidebar-title">Attendance System</p>
+
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+       <a href="teachers.html" class="nav-item">Teachers</a>
+        <a href="students.html" class="nav-link">Students</a>
+        <a href="courses.html" class="nav-link">Courses & Classrooms</a>
+        <a href="cameras.html" class="nav-link">Cameras</a>
+        <a href="sessions.html" class="nav-link active">Attendance Sessions</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Attendance Sessions</h1>
+
+        <div class="topbar-right">
+          <div class="teacher-chip">
+            <div class="avatar-circle">T</div>
+            <span>Teacher Name</span>
+          </div>
+          <button class="logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page">
+        <section class="card sessions-card">
+          <!-- CARD HEADER -->
+          <div class="card-header">
+            <div>
+              <h2>Manage Attendance Sessions</h2>
+              <p>Start new sessions and review previous attendance logs.</p>
+            </div>
+
+            <div class="header-actions">
+              <div class="filter-wrapper">
+                <select>
+                  <option>All Courses</option>
+                  <option>CS101 – Intro to Programming</option>
+                  <option>SE342 – Software Validation & Testing</option>
+                </select>
+              </div>
+              <button class="primary-btn">Create New Session</button>
+            </div>
+          </div>
+
+          <!-- CARD BODY (TABLE-LIKE LIST) -->
+          <div class="card-body">
+            <div class="sessions-header-row">
+              <span class="col-course">Course</span>
+              <span class="col-date">Date</span>
+              <span class="col-time">Time</span>
+              <span class="col-status">Status</span>
+              <span class="col-actions">Actions</span>
+            </div>
+
+            <!-- ROW 1 -->
+            <div class="session-row active">
+              <span class="col-course">CS101 – Intro to Programming</span>
+              <span class="col-date">2025-11-23</span>
+              <span class="col-time">10:00 – 11:15</span>
+              <span class="col-status status-active">Active</span>
+              <span class="col-actions">
+                <button class="primary-btn small">Open Live View</button>
+                <button class="secondary-btn small">End Session</button>
+              </span>
+            </div>
+
+            <!-- ROW 2 -->
+            <div class="session-row">
+              <span class="col-course">SE342 – Software Validation & Testing</span>
+              <span class="col-date">2025-11-21</span>
+              <span class="col-time">13:00 – 14:30</span>
+              <span class="col-status status-completed">Completed</span>
+              <span class="col-actions">
+                <button class="secondary-btn small">View Details</button>
+              </span>
+            </div>
+
+            <!-- ROW 3 -->
+            <div class="session-row">
+              <span class="col-course">AI201 – Machine Learning</span>
+              <span class="col-date">2025-11-20</span>
+              <span class="col-time">09:00 – 10:30</span>
+              <span class="col-status status-completed">Completed</span>
+              <span class="col-actions">
+                <button class="secondary-btn small">View Details</button>
+              </span>
+            </div>
+
+            <!-- ROW 4 -->
+            <div class="session-row">
+              <span class="col-course">CS102 – Data Structures</span>
+              <span class="col-date">2025-11-18</span>
+              <span class="col-time">11:00 – 12:30</span>
+              <span class="col-status status-completed">Completed</span>
+              <span class="col-actions">
+                <button class="secondary-btn small">View Details</button>
+              </span>
+            </div>
+
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

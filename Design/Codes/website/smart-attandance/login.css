@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* TAM EKRAN GRADIENT – LOGO MORUYLA UYUMLU (#A32081) */
+.background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    #A32081 0%,   /* Logo ile aynı mor */
+    #8D176D 50%,  /* Uyumlu koyu geçiş */
+    #5A0C46 100%  /* Derin mor gölge */
+  );
+  z-index: 1;
+}
+
+/* ŞEFFAF KAMPÜS FOTOĞRAFI */
+.bg-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.18;   /* Şeffaflık */
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* LOGIN ORTALAMA */
+.login-container {
+  position: relative;
+  z-index: 3;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+/* BÜYÜK LOGO */
+.maltepe-logo {
+  width: 420px;        /* büyütüldü */
+  margin-bottom: 30px;
+}
+
+/* PORTAL BAŞLIKLARI */
+.portal-title {
+  font-size: 34px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.portal-sub {
+  font-size: 16px;
+  opacity: 0.85;
+  margin-bottom: 25px;
+}
+
+/* BEYAZ MODERN LOGIN KARTI */
+.login-card {
+  background: #ffffff;          /* Beyaz */
+  padding: 40px 36px;
+  width: 420px;
+  border-radius: 28px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  animation: fadeIn 0.6s ease;
+}
+
+/* BAŞLIKLAR */
+.login-heading {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin-bottom: 6px;
+}
+
+.sub-heading {
+  color: #6b7280;
+  margin-bottom: 26px;
+  font-size: 14px;
+}
+
+/* INPUTLAR */
+label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  margin: 10px 0 6px;
+  font-size: 14px;
+}
+
+.input-shell {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+}
+
+.input-shell input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  padding: 14px 0;
+  font-size: 14px;
+  color: #111;
+  outline: none;
+}
+
+/* Password alanı için icon yerleşimi */
+.input-with-icon {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 18px;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+/* REMEMBER + FORGOT */
+.options-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #444;
+}
+
+.forgot-link {
+  color: #A32081;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* SIGN IN BUTTON — MOR */
+.login-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 14px;
+  border: none;
+  background: #A32081;    /* Logo ile aynı mor */
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.login-btn:hover {
+  background: #8D176D;
+  box-shadow: 0 10px 24px rgba(149, 27, 116, 0.35);
+}
+
+/* ANİMASYON */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

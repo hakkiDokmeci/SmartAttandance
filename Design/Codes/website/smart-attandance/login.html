@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smart Attendance Login</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+
+  <!-- Tam ekran mor gradient + şeffaf kampüs fotoğrafı -->
+  <div class="background">
+    <img src="assets/maltepe_bg.png" class="bg-image" alt="Maltepe Campus">
+  </div>
+
+  <!-- Ortadaki logo + başlık + login kartı -->
+  <div class="login-container">
+
+    <img src="assets/maltepe_logo.png"
+         class="maltepe-logo"
+         alt="Maltepe University Logo" />
+
+    <h1 class="portal-title">Smart Attendance Portal</h1>
+    <p class="portal-sub">
+      Use your Maltepe University account to access the system.
+    </p>
+
+    <!-- Beyaz login kartı -->
+    <div class="login-card">
+
+      <h2 class="login-heading">Welcome back</h2>
+      <p class="sub-heading">Sign in with your institutional credentials</p>
+
+      <form action="dashboard.html" method="get">
+
+        <!-- Email -->
+        <label for="email">Email or Username</label>
+        <div class="input-shell">
+          <input id="email"
+                 type="email"
+                 placeholder="e.g. teacher@maltepe.edu.tr"
+                 required />
+        </div>
+
+        <!-- Password -->
+        <label for="password">Password</label>
+        <div class="input-shell input-with-icon">
+          <input id="password"
+                 type="password"
+                 placeholder="********"
+                 required />
+          <span class="eye-icon">👁️</span>
+        </div>
+
+        <!-- Remember + Forgot -->
+        <div class="options-row">
+          <label class="remember-me">
+            <input type="checkbox" />
+            <span>Remember me</span>
+          </label>
+          <a class="forgot-link" href="#">Forgot password?</a>
+        </div>
+
+        <!-- Sign In butonu -->
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

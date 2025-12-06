@@ -1,0 +1,773 @@
+* {
+
+margin: 0;
+
+padding: 0;
+
+box-sizing: border-box;
+
+font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+}
+
+
+
+:root {
+
+--maltepe: #a32081;
+
+--maltepe-soft: #fdf2ff;
+
+--page-bg: #f5f3ff;
+
+--border-soft: #e5e7eb;
+
+}
+
+
+
+body {
+
+background: var(--page-bg);
+
+}
+
+
+
+/* ANA LAYOUT --------------------------------------------------- */
+
+
+
+.dash-root {
+
+display: flex;
+
+min-height: 100vh;
+
+}
+
+
+
+/* SIDEBAR ------------------------------------------------------ */
+
+
+
+.sidebar {
+
+width: 260px;
+
+display: flex;
+
+flex-direction: column;
+
+background: #ffffff;
+
+}
+
+
+
+/* Üst mor bar + logo */
+
+.sidebar-top {
+
+height: 80px;
+
+background: var(--maltepe);
+
+display: flex;
+
+align-items: center;
+
+padding-left: 20px;
+
+}
+
+
+
+.sidebar-logo {
+
+max-height: 50px;
+
+max-width: 210px;
+
+}
+
+
+
+/* Alt beyaz kısım */
+
+.sidebar-inner {
+
+padding: 24px 24px 40px;
+
+}
+
+
+
+.sidebar-title {
+
+color: var(--maltepe);
+
+font-weight: 600;
+
+font-size: 16px;
+
+margin-bottom: 20px;
+
+}
+
+
+
+.sidebar-menu {
+
+display: flex;
+
+flex-direction: column;
+
+gap: 12px;
+
+}
+
+
+
+/* TASARIM GÜNCELLEMESİ BURADA YAPILDI */
+
+/* Linklerin animasyonlu, yuvarlak ve modern hali */
+
+.menu-item,
+
+.sidebar-menu a {
+
+font-size: 14px;
+
+text-decoration: none !important;
+
+color: #6b7280 !important;
+
+display: block;
+
+
+
+/* Yeni tasarım özellikleri: */
+
+padding: 8px 12px; /* İç boşluk */
+
+border-radius: 999px; /* Yuvarlak kenarlar */
+
+transition: all 0.2s ease; /* Yumuşak geçiş animasyonu */
+
+border: 1px solid transparent; /* Kenarlık payı */
+
+}
+
+
+
+/* Aktif link ayarı */
+
+.menu-item.active,
+
+.sidebar-menu a.active {
+
+color: var(--maltepe) !important;
+
+font-weight: 600;
+
+background: #fce7f3;
+
+border-color: #fce7f3;
+
+}
+
+
+
+/* Hover (üzerine gelince) ayarı */
+
+.menu-item:hover,
+
+.sidebar-menu a:hover {
+
+background: #f3f4f6;
+
+color: #111827 !important;
+
+border-color: #e5e7eb;
+
+}
+
+
+
+/* MAIN AREA ---------------------------------------------------- */
+
+
+
+.main-area {
+
+flex: 1;
+
+display: flex;
+
+flex-direction: column;
+
+}
+
+
+
+/* TOPBAR */
+
+
+
+.topbar {
+
+height: 72px;
+
+background: #ffffff;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+padding: 0 32px;
+
+border-bottom: 1px solid #e5e7eb;
+
+}
+
+
+
+.topbar-title {
+
+font-size: 20px;
+
+font-weight: 600;
+
+color: #111827;
+
+}
+
+
+
+.topbar-right {
+
+display: flex;
+
+align-items: center;
+
+gap: 16px;
+
+}
+
+
+
+.profile {
+
+display: flex;
+
+align-items: center;
+
+gap: 8px;
+
+}
+
+
+
+.avatar-circle {
+
+width: 32px;
+
+height: 32px;
+
+border-radius: 999px;
+
+background: var(--maltepe);
+
+color: #ffffff;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+font-size: 14px;
+
+font-weight: 600;
+
+}
+
+
+
+.teacher-name {
+
+font-size: 14px;
+
+color: #6b7280;
+
+}
+
+
+
+.btn-logout {
+
+border-radius: 999px;
+
+border: 1px solid #f9a8d4;
+
+background: #fdf2ff;
+
+color: var(--maltepe);
+
+padding: 6px 18px;
+
+font-size: 13px;
+
+font-weight: 600;
+
+cursor: pointer;
+
+}
+
+
+
+/* CONTENT ------------------------------------------------------ */
+
+
+
+.content-wrapper {
+
+flex: 1;
+
+padding: 24px;
+
+}
+
+
+
+.content-card {
+
+background: #ffffff;
+
+border-radius: 24px;
+
+border: 1px solid var(--border-soft);
+
+padding: 24px 24px 40px;
+
+height: calc(100vh - 72px - 48px);
+
+}
+
+
+
+/* CARD GRID ---------------------------------------------------- */
+
+
+
+.card-row {
+
+display: flex;
+
+gap: 24px;
+
+}
+
+
+
+/* ikinci satır için margin */
+
+.card-row-bottom {
+
+margin-top: 24px;
+
+}
+
+
+
+/* Kartların boy oranları */
+
+.card-small {
+
+flex: 1;
+
+}
+
+.card-large {
+
+flex: 2;
+
+}
+
+.card-medium {
+
+flex: 1;
+
+}
+
+
+
+/* Genel kart stili (mor arka plan) */
+
+.card {
+
+background: var(--maltepe);
+
+color: #ffffff;
+
+border-radius: 24px;
+
+padding: 18px 20px 20px;
+
+}
+
+
+
+/* Kart header */
+
+.card-header {
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: flex-start;
+
+}
+
+
+
+.card-header h2 {
+
+font-size: 15px;
+
+font-weight: 600;
+
+margin-bottom: 4px;
+
+}
+
+
+
+.card-header p {
+
+font-size: 12px;
+
+color: #fce7f3;
+
+}
+
+
+
+/* Kart iconları */
+
+.card-icon-circle {
+
+width: 32px;
+
+height: 32px;
+
+border-radius: 999px;
+
+background: #fdf2ff;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+color: var(--maltepe);
+
+font-weight: 700;
+
+font-size: 20px;
+
+}
+
+
+
+.card-icon-menu span {
+
+display: block;
+
+width: 14px;
+
+height: 2px;
+
+background: var(--maltepe);
+
+border-radius: 999px;
+
+margin: 2px 0;
+
+}
+
+
+
+.card-icon-camera {
+
+position: relative;
+
+}
+
+
+
+.cam-body {
+
+width: 16px;
+
+height: 12px;
+
+border-radius: 4px;
+
+border: 2px solid var(--maltepe);
+
+}
+
+
+
+.cam-dot {
+
+position: absolute;
+
+right: 7px;
+
+top: 7px;
+
+width: 4px;
+
+height: 4px;
+
+border-radius: 999px;
+
+background: var(--maltepe);
+
+}
+
+
+
+/* Kart footer */
+
+.card-footer {
+
+margin-top: 18px;
+
+}
+
+
+
+/* Beyaz buton */
+
+.btn-white {
+
+border-radius: 999px;
+
+border: none;
+
+background: #ffffff;
+
+color: var(--maltepe);
+
+padding: 8px 16px;
+
+font-size: 13px;
+
+font-weight: 600;
+
+cursor: pointer;
+
+}
+
+
+
+/* Attendance kart içi ------------------------------------------ */
+
+
+
+.filter-row {
+
+display: flex;
+
+align-items: center;
+
+gap: 12px;
+
+margin-top: 14px;
+
+}
+
+
+
+.filter-pill {
+
+background: #ffffff;
+
+color: #4b5563;
+
+padding: 8px 16px;
+
+border-radius: 999px;
+
+font-size: 12px;
+
+}
+
+
+
+.start-btn {
+
+margin-left: auto;
+
+}
+
+
+
+.attendance-body {
+
+margin-top: 18px;
+
+display: grid;
+
+grid-template-columns: 1.1fr 1.3fr;
+
+gap: 16px;
+
+}
+
+
+
+.preview-box {
+
+background: var(--maltepe-soft);
+
+border-radius: 18px;
+
+border: 2px dashed #f9a8d4;
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+font-size: 13px;
+
+color: #a855f7;
+
+}
+
+
+
+.live-box {
+
+background: #ffffff;
+
+border-radius: 18px;
+
+padding: 16px;
+
+color: #111827;
+
+}
+
+
+
+.live-box h3 {
+
+font-size: 14px;
+
+margin-bottom: 8px;
+
+}
+
+
+
+.live-box ul {
+
+list-style: none;
+
+padding-left: 0;
+
+font-size: 13px;
+
+color: #f9fafb;
+
+}
+
+.live-box li::before {
+
+content: "• ";
+
+}
+
+
+
+/* Reports kartı ----------------------------------------------- */
+
+
+
+.reports-body {
+
+margin-top: 18px;
+
+}
+
+
+
+.report-line {
+
+height: 6px;
+
+border-radius: 999px;
+
+background: #fdf2ff;
+
+margin: 6px 0;
+
+}
+
+.line-1 {
+
+width: 80%;
+
+}
+
+.line-2 {
+
+width: 60%;
+
+}
+
+.line-3 {
+
+width: 70%;
+
+}
+
+
+
+.report-text {
+
+margin-top: 14px;
+
+font-size: 12px;
+
+color: #fdf2ff;
+
+}
+
+
+
+.report-text p + p {
+
+margin-top: 4px;
+
+}
+
+
+
+.reports-btn {
+
+margin-top: 18px;
+
+}
