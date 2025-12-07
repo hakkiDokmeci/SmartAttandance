@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students – Smart Attendance Portal</title>
+  <link rel="stylesheet" href="students.css" />
+  
+  <style>
+    /* Modal Arka Planı (Overlay) */
+    .modal-overlay {
+      display: none; /* Varsayılan olarak gizli */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Yarı saydam siyah */
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Modal Görünür Olduğunda */
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Modal Kutusu */
+    .modal-card {
+      background-color: #fff;
+      width: 500px;
+      max-width: 90%;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      position: relative;
+      font-family: sans-serif;
+    }
+
+    /* Modal Başlık */
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #333;
+    }
+    .close-icon {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #999;
+    }
+
+    /* Form Elemanları */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #333;
+    }
+    .form-group input, 
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background-color: #f9f9f9;
+      box-sizing: border-box; /* Padding taşmasını önler */
+      color: #555;
+    }
+    .form-group input::placeholder {
+      color: #aaa;
+    }
+
+    /* Fotoğraf Yükleme Alanı */
+    .upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 24px;
+      background-color: #fafafa;
+      transition: background 0.2s;
+    }
+    .upload-area:hover {
+      background-color: #f0f0f0;
+    }
+    .upload-icon {
+      font-size: 24px;
+      color: #666;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .upload-text {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* Butonlar */
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-size: 0.95rem;
+    }
+    .btn-cancel {
+      background-color: #6c757d;
+      color: white;
+    }
+    .btn-submit {
+      background-color: #8e24aa; /* Mor renk (logoya uygun) */
+      color: white;
+    }
+    .btn-submit:hover {
+      background-color: #7b1fa2;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/maltepe_logo.png"
+             alt="Maltepe University"
+             class="sidebar-logo" />
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="app-name">Attendance System</p>
+
+        <a href="dashboard.html" class="nav-item">Dashboard</a>
+        <a href="teachers.html" class="nav-item">Teachers</a>
+        <a href="students.html" class="nav-item active">Students</a>
+        <a href="courses.html" class="nav-item">Courses & Classrooms</a>
+        <a href="cameras.html" class="nav-item">Cameras</a>
+        <a href="sessions.html" class="nav-item">Attendance Sessions</a>
+        <a href="reports.html" class="nav-item">Reports</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <h1 class="page-title">Students</h1>
+
+        <div class="topbar-right">
+          <button class="logout-btn">Logout</button>
+          <div class="teacher-pill">
+            <div class="avatar">T</div>
+            <span>Teacher Name</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="content-card">
+
+        <div class="content-header">
+          <div>
+            <h2>Student Management</h2>
+            <p>Manage registered students and their information.</p>
+          </div>
+
+          <div class="header-actions">
+            <div class="search-box">
+              <input type="text"
+                     placeholder="Search student by name or ID..." />
+            </div>
+            <button class="primary-btn" id="addStudentBtn">Add Student</button>
+          </div>
+        </div>
+
+        <div class="content-body">
+          <div class="students-panel">
+            <h3>Students</h3>
+
+            <div class="student-row selected">
+              <div>
+                <p class="name">Hakkı Dökmeci</p>
+                <p class="id">ID: 220706026</p>
+              </div>
+            </div>
+
+            <div class="student-row">
+              <div>
+                <p class="name">Berkay Aksoy</p>
+                <p class="id">ID: 220706027</p>
+              </div>
+            </div>
+
+            <div class="student-row">
+              <div>
+                <p class="name">Student A</p>
+                <p class="id">ID: 220706010</p>
+              </div>
+            </div>
+
+            <div class="student-row">
+              <div>
+                <p class="name">Student B</p>
+                <p class="id">ID: 220706011</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="details-panel">
+            <h3>Selected Student</h3>
+
+            <div class="detail-row">
+              <span class="label">Name</span>
+              <span class="value">Hakkı Dökmeci</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label">Student ID</span>
+              <span class="value">220706026</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label">Program</span>
+              <span class="value">Computer Engineering</span>
+            </div>
+
+            <div class="detail-row">
+              <span class="label">Average Attendance</span>
+              <span class="value highlight">96%</span>
+            </div>
+
+            <div class="detail-actions">
+              <button class="primary-btn">View Attendance</button>
+              <button class="secondary-btn">Remove Student</button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add New Student</h3>
+
+          
+
+        <button class="close-icon" onclick="closeModal()">&times;</button>
+      </div>
+      
+        <form method="post" action="https://localhost:7179/api/students">
+        <div class="modal-body">
+          <!-- First Name -->
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" name="FirstName" placeholder="Ahmet">
+          </div>
+
+          <!-- Last Name -->
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" name="LastName" placeholder="Yılmaz">
+          </div>
+
+          <!-- Student Number -->
+          <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" name="StudentNumber" placeholder="Ex: 220706001">
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="Email" placeholder="ahmet@stu.maltepe.edu.tr">
+          </div>
+
+          <!-- Department / Program – sadece UI için -->
+          <div class="form-group">
+            <label>Department / Program</label>
+            <select>
+              <option>Computer Engineering</option>
+              <option>Software Engineering</option>
+              <option>Electrical Engineering</option>
+            </select>
+          </div>
+
+          <!-- Student Photo – sadece UI için -->
+          <div class="form-group">
+            <label>Student Photo</label>
+            <div class="upload-area">
+              <span class="upload-icon">&#8679;</span> 
+              <span class="upload-text">Upload Photo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-submit">Add Student</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+    // Elemanları seçelim
+    const modal = document.getElementById('studentModal');
+    const addBtn = document.getElementById('addStudentBtn');
+
+    // Modalı açma fonksiyonu
+    addBtn.addEventListener('click', () => {
+      modal.classList.add('active');
+    });
+
+    // Modalı kapatma fonksiyonu
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    // Modalın dışındaki siyah alana tıklayınca kapatma
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
