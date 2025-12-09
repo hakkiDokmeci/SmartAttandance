@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Attendance Sessions – Smart Attendance Portal</title>
+  <link rel="stylesheet" href="sessions.css" />
+
+  <!-- Modal stilleri -->
+  <style>
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1500;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      width: 480px;
+      max-width: 95%;
+      border-radius: 16px;
+      padding: 22px 24px;
+      box-shadow: 0 20px 40px rgba(15,23,42,0.18);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .modal-close {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .modal-subtitle {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 14px;
+    }
+
+    .form-field {
+      margin-bottom: 14px;
+    }
+    .form-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #374151;
+    }
+    .form-field input,
+    .form-field select {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+      outline: none;
+    }
+    .form-field input:focus,
+    .form-field select:focus {
+      border-color: #a30569;
+      box-shadow: 0 0 0 1px rgba(163, 5, 105, 0.2);
+    }
+
+    .modal-footer {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .btn-cancel,
+    .btn-close {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f3f4f6;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-submit {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: none;
+      background: #a30569;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Attendance Records tablo stil */
+    .records-table-header,
+    .records-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+    .records-table-header {
+      background: #f3f4f6;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .records-row:nth-child(even) {
+      background: #f9fafb;
+    }
+    .records-row-status-present {
+      color: #16a34a;
+      font-weight: 600;
+    }
+    .records-row-status-absent {
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .records-row-status-late {
+      color: #f97316;
+      font-weight: 600;
+    }
+
+    /* Satır seçimi için renk */
+    .session-row.selected {
+      background: #f4e3f1;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo-bar">
+        <img src="assets/maltepe_logo.png"
+             alt="Maltepe University Logo"
+             class="sidebar-logo">
+      </div>
+
+      <nav class="sidebar-nav">
+        <p class="sidebar-title">Attendance System</p>
+
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="teachers.html" class="nav-item">Teachers</a>
+        <a href="students.html" class="nav-link">Students</a>
+        <a href="courses.html" class="nav-link">Courses & Classrooms</a>
+        <a href="cameras.html" class="nav-link">Cameras</a>
+        <a href="sessions.html" class="nav-link active">Attendance Sessions</a>
+        <a href="reports.html" class="nav-link">Reports</a>
+      </nav>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Attendance Sessions</h1>
+
+        <div class="topbar-right">
+          <div class="teacher-chip">
+            <div class="avatar-circle">T</div>
+            <span>Teacher Name</span>
+          </div>
+          <button class="logout-btn">Logout</button>
+        </div>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <main class="page">
+        <section class="card sessions-card">
+          <!-- CARD HEADER -->
+          <div class="card-header">
+            <div>
+              <h2>Manage Attendance Sessions</h2>
+              <p>Start new sessions and review previous attendance logs.</p>
+            </div>
+
+            <div class="header-actions">
+              <div class="filter-wrapper">
+                <select>
+                  <option>All Courses</option>
+                  <option>CS101 – Intro to Programming</option>
+                  <option>SE342 – Software Validation & Testing</option>
+                </select>
+              </div>
+              <!-- Create Session Modal açan buton -->
+              <button class="primary-btn" id="openCreateSession">Create New Session</button>
+            </div>
+          </div>
+
+          <!-- CARD BODY (TABLE-LIKE LIST) -->
+          <div class="card-body">
+            <div class="sessions-header-row">
+              <span class="col-course">Course</span>
+              <span class="col-date">Date</span>
+              <span class="col-time">Time</span>
+              <span class="col-status">Status</span>
+              <span class="col-actions">Actions</span>
+            </div>
+
+            <!-- ROW 1 (SessionID = 1) -->
+            <div class="session-row active selected" data-session-id="1">
+              <span class="col-course">CS101 – Intro to Programming</span>
+              <span class="col-date">2025-11-23</span>
+              <span class="col-time">10:00 – 11:15</span>
+              <span class="col-status status-active">Active</span>
+              <span class="col-actions">
+                <button class="primary-btn small view-attendance-btn">Open Live View</button>
+                <button class="secondary-btn small">End Session</button>
+              </span>
+            </div>
+
+            <!-- ROW 2 (SessionID = 2) -->
+            <div class="session-row" data-session-id="2">
+              <span class="col-course">SE342 – Software Validation & Testing</span>
+              <span class="col-date">2025-11-21</span>
+              <span class="col-time">13:00 – 14:30</span>
+              <span class="col-status status-completed">Completed</span>
+              <span class="col-actions">
+                <button class="secondary-btn small view-attendance-btn">View Details</button>
+              </span>
+            </div>
+
+            <!-- ROW 3 (SessionID = 3) -->
+            <div class="session-row" data-session-id="3">
+              <span class="col-course">AI201 – Machine Learning</span>
+              <span class="col-date">2025-11-20</span>
+              <span class="col-time">09:00 – 10:30</span>
+              <span class="col-status status-completed">Completed</span>
+              <span class="col-actions">
+                <button class="secondary-btn small view-attendance-btn">View Details</button>
+              </span>
+            </div>
+
+            <!-- ROW 4 (SessionID = 4) -->
+            <div class="session-row" data-session-id="4">
+              <span class="col-course">CS102 – Data Structures</span>
+              <span class="col-date">2025-11-18</span>
+              <span class="col-time">11:00 – 12:30</span>
+              <span class="col-status status-completed">Completed</span>
+              <span class="col-actions">
+                <button class="secondary-btn small view-attendance-btn">View Details</button>
+              </span>
+            </div>
+
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- CREATE NEW SESSION MODAL (Attendance_Sessions ile uyumlu) -->
+  <div class="modal-overlay" id="createSessionModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Create New Attendance Session</h2>
+        <button class="modal-close" id="closeCreateSession">&times;</button>
+      </div>
+      <p class="modal-subtitle">
+        Fields are mapped to <strong>Attendance_Sessions</strong> table (CourseID, ClassroomID, SessionDateTime).
+      </p>
+
+      <form method="post" action="https://localhost:7179/api/attendancesessions">
+        <!-- CourseID (INT, NOT NULL) -->
+        <div class="form-field">
+          <label for="courseIdInput">Course ID (CourseID)</label>
+          <input
+            id="courseIdInput"
+            type="number"
+            name="CourseID"
+            placeholder="e.g., 1"
+            required
+          />
+        </div>
+
+        <!-- ClassroomID (INT, NOT NULL) -->
+        <div class="form-field">
+          <label for="classroomIdInput">Classroom ID (ClassroomID)</label>
+          <input
+            id="classroomIdInput"
+            type="number"
+            name="ClassroomID"
+            placeholder="e.g., 1"
+            required
+          />
+        </div>
+
+        <!-- SessionDateTime (DATETIME2, NOT NULL) -->
+        <div class="form-field">
+          <label for="sessionDateTimeInput">Session Date & Time (SessionDateTime)</label>
+          <input
+            id="sessionDateTimeInput"
+            type="datetime-local"
+            name="SessionDateTime"
+            required
+          />
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" id="cancelCreateSession">Cancel</button>
+          <button type="submit" class="btn-submit">Create Session</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ATTENDANCE RECORDS MODAL -->
+  <div class="modal-overlay" id="attendanceModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="attendanceModalTitle">Attendance Records</h2>
+        <button class="modal-close" id="closeAttendanceModal">&times;</button>
+      </div>
+      <p class="modal-subtitle" id="attendanceModalSubtitle">
+        SessionID'ye göre Attendance_Records kayıtları.
+      </p>
+
+      <!-- Başlık satırı: artık Session ID -->
+      <div class="records-table-header">
+        <span>Session ID</span>
+        <span>Student ID</span>
+        <span>Status</span>
+      </div>
+
+      <!-- Kayıt satırlarının ekleneceği yer -->
+      <div id="attendanceRecordsContainer">
+        <!-- JS burada rows ekleyecek -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-close" id="closeAttendanceModal2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS: Create Session + Attendance Records + Row selection -->
+  <script>
+    // Dummy Attendance_Records (SQL INSERT'in JS versiyonu)
+    const dummyAttendanceRecords = [
+      { recordId: 1, sessionId: 1, studentId: 1, status: "Present" },
+      { recordId: 2, sessionId: 2, studentId: 2, status: "Absent" },
+      { recordId: 3, sessionId: 3, studentId: 3, status: "Present" },
+      { recordId: 4, sessionId: 4, studentId: 4, status: "Late" },
+      { recordId: 5, sessionId: 5, studentId: 5, status: "Present" }
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      /* --------- CREATE SESSION MODAL --------- */
+      const createSessionModal = document.getElementById("createSessionModal");
+      const openCreateSessionBtn = document.getElementById("openCreateSession");
+      const closeCreateSessionBtn = document.getElementById("closeCreateSession");
+      const cancelCreateSessionBtn = document.getElementById("cancelCreateSession");
+
+      function openCreateSessionModal() {
+        createSessionModal.classList.add("active");
+      }
+      function closeCreateSessionModal() {
+        createSessionModal.classList.remove("active");
+      }
+
+      openCreateSessionBtn.addEventListener("click", openCreateSessionModal);
+      closeCreateSessionBtn.addEventListener("click", closeCreateSessionModal);
+      cancelCreateSessionBtn.addEventListener("click", closeCreateSessionModal);
+      createSessionModal.addEventListener("click", (e) => {
+        if (e.target === createSessionModal) {
+          closeCreateSessionModal();
+        }
+      });
+
+      /* --------- ATTENDANCE RECORDS MODAL --------- */
+      const attendanceModal = document.getElementById("attendanceModal");
+      const attendanceRecordsContainer = document.getElementById("attendanceRecordsContainer");
+      const attendanceModalTitle = document.getElementById("attendanceModalTitle");
+      const attendanceModalSubtitle = document.getElementById("attendanceModalSubtitle");
+      const closeAttendanceButtons = [
+        document.getElementById("closeAttendanceModal"),
+        document.getElementById("closeAttendanceModal2")
+      ];
+
+      function openAttendanceModal(sessionId, courseText) {
+        attendanceModalTitle.textContent = `Attendance Records – Session #${sessionId}`;
+        attendanceModalSubtitle.textContent = courseText
+          ? `Course: ${courseText} · SessionID = ${sessionId}`
+          : `SessionID = ${sessionId}`;
+
+        attendanceRecordsContainer.innerHTML = "";
+
+        const recordsForSession = dummyAttendanceRecords.filter(
+          r => r.sessionId === sessionId
+        );
+
+        if (recordsForSession.length === 0) {
+          const emptyDiv = document.createElement("div");
+          emptyDiv.style.padding = "10px";
+          emptyDiv.style.fontSize = "13px";
+          emptyDiv.textContent = "Bu oturum için attendance kaydı bulunamadı.";
+          attendanceRecordsContainer.appendChild(emptyDiv);
+        } else {
+          recordsForSession.forEach(r => {
+            const row = document.createElement("div");
+            row.classList.add("records-row");
+
+            let statusClass = "";
+            if (r.status === "Present") statusClass = "records-row-status-present";
+            else if (r.status === "Absent") statusClass = "records-row-status-absent";
+            else if (r.status === "Late") statusClass = "records-row-status-late";
+
+            // İlk kolon artık SessionID
+            row.innerHTML = `
+              <span>${r.sessionId}</span>
+              <span>${r.studentId}</span>
+              <span class="${statusClass}">${r.status}</span>
+            `;
+            attendanceRecordsContainer.appendChild(row);
+          });
+        }
+
+        attendanceModal.classList.add("active");
+      }
+
+      function closeAttendanceModal() {
+        attendanceModal.classList.remove("active");
+      }
+
+      // View Details / Open Live View butonları
+      const viewButtons = document.querySelectorAll(".view-attendance-btn");
+      viewButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const row = btn.closest(".session-row");
+          const sessionId = Number(row.dataset.sessionId);
+          const courseText = row.querySelector(".col-course")?.textContent || "";
+          openAttendanceModal(sessionId, courseText);
+        });
+      });
+
+      closeAttendanceButtons.forEach(b => b && b.addEventListener("click", closeAttendanceModal));
+      attendanceModal.addEventListener("click", (e) => {
+        if (e.target === attendanceModal) {
+          closeAttendanceModal();
+        }
+      });
+
+      /* --------- SESSION ROW SEÇİMİ (RENK) --------- */
+      const sessionRows = document.querySelectorAll(".session-row");
+      sessionRows.forEach(row => {
+        row.addEventListener("click", (e) => {
+          // Eğer butona tıklandıysa sadece buton aksiyonunu yap, seçimi değiştirme
+          const isButton = e.target.closest("button");
+          if (isButton) return;
+
+          sessionRows.forEach(r => r.classList.remove("selected"));
+          row.classList.add("selected");
+        });
+      });
+    });
+  </script>
+</body>
+</html>

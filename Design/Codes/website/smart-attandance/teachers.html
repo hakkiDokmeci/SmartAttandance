@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Teachers Management – Smart Attendance System</title>
+  <link rel="stylesheet" href="teachers.css" />
+
+  <!-- Modal + küçük ekstra stiller -->
+  <style>
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(15,23,42,0.18);
+      padding: 20px 24px;
+      width: 420px;
+      max-width: 90%;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .modal-header h2 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .modal-header button {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Seçili satır vurgusu */
+    .table-row.selected {
+      background-color: #f4e3f1;
+    }
+
+    /* Alt taraftaki Edit/Delete paneli */
+    .teacher-actions-panel {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    /* Email ile ID arasını açmak için */
+    .col-email {
+      display: inline-block;
+      min-width: 220px; /* email kolonunu biraz geniş tut */
+    }
+
+    .col-id {
+      display: inline-block;
+      margin-left: 24px; /* email'den sonra sağa doğru boşluk */
+      text-align: right;
+      min-width: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dash-root">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/maltepe_logo.png" class="sidebar-logo" alt="Maltepe University" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <a href="dashboard.html" class="menu-item">Dashboard</a>
+          <a href="teachers.html" class="menu-item active">Teachers</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <a href="courses.html" class="menu-item">Courses & Classrooms</a>
+          <a href="cameras.html" class="menu-item">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <a href="reports.html" class="menu-item">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Teachers Management</h1>
+
+        <div class="topbar-right">
+          <div class="user-chip">
+            <div class="avatar-circle">T</div>
+            <span class="user-name">Teacher Name</span>
+          </div>
+          <button class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="content-wrapper">
+        <section class="card">
+
+          <!-- FILTERS + ADD BUTTON -->
+          <div class="toolbar">
+            <div class="search-wrapper">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search by name or email..."
+              />
+            </div>
+
+            <div class="toolbar-right">
+              <button class="btn-primary" id="openAddTeacher">
+                Add New Teacher
+              </button>
+            </div>
+          </div>
+
+          <!-- ADD TEACHER PANEL -->
+          <section class="add-teacher-panel" id="addTeacherPanel">
+            <!-- BACKEND'E GİDEN FORM -->
+            <form method="post" action="https://localhost:7179/api/teachers">
+              <div class="add-teacher-header">
+                <div>
+                  <h2>Add New Teacher</h2>
+                  <p>Fill in the information to register a new instructor.</p>
+                </div>
+                <button type="button" class="close-add-teacher" id="closeAddTeacher">✕</button>
+              </div>
+
+              <div class="add-teacher-grid">
+                <!-- First Name (DB) -->
+                <div class="form-field">
+                  <label>First Name</label>
+                  <input type="text" name="FirstName" placeholder="Ahmet" />
+                </div>
+
+                <!-- Last Name (DB) -->
+                <div class="form-field">
+                  <label>Last Name</label>
+                  <input type="text" name="LastName" placeholder="Yılmaz" />
+                </div>
+
+                <!-- Email (DB) -->
+                <div class="form-field">
+                  <label>Email</label>
+                  <input type="email" name="Email" placeholder="name@maltepe.edu.tr" />
+                </div>
+
+                <!-- TeacherID: artık senin girdiğin sayı backend'e de gider -->
+                <div class="form-field">
+                  <label>Teacher ID</label>
+                  <input type="number" name="TeacherID" placeholder="1" />
+                </div>
+              </div>
+
+              <div class="add-teacher-actions">
+                <button type="button" class="btn-secondary" id="cancelAddTeacher">Cancel</button>
+                <button type="submit" class="btn-primary">Save Teacher</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- TEACHER TABLE -->
+          <div class="table-card">
+
+            <div class="table-header-row">
+              <span class="col-instructor">Instructor</span>
+              <span class="col-email">Email</span>
+              <span class="col-id">ID</span>
+            </div>
+
+            <!-- DUMMY DATA SATIRLARI -->
+            <div class="table-row selected"
+                 data-teacher-id="1"
+                 data-first-name="Ahmet"
+                 data-last-name="Yılmaz"
+                 data-email="ahmet.yilmaz@maltepe.edu.tr">
+              <span class="col-instructor">Prof. Dr. Ahmet Yılmaz</span>
+              <span class="col-email">ahmet.yilmaz@maltepe.edu.tr</span>
+              <span class="col-id">1</span>
+            </div>
+
+            <div class="table-row"
+                 data-teacher-id="2"
+                 data-first-name="Ayşe"
+                 data-last-name="Kaya"
+                 data-email="ayse.kaya@maltepe.edu.tr">
+              <span class="col-instructor">Lecturer Ayşe Kaya</span>
+              <span class="col-email">ayse.kaya@maltepe.edu.tr</span>
+              <span class="col-id">2</span>
+            </div>
+
+            <div class="table-row"
+                 data-teacher-id="3"
+                 data-first-name="Berk"
+                 data-last-name="Demir"
+                 data-email="berk.demir@maltepe.edu.tr">
+              <span class="col-instructor">Dr. Berk Demir</span>
+              <span class="col-email">berk.demir@maltepe.edu.tr</span>
+              <span class="col-id">3</span>
+            </div>
+
+          </div>
+
+          <!-- EDIT/DELETE PANEL -->
+          <div class="teacher-actions-panel">
+            <button class="btn-primary" id="editTeacherBtn">Edit Teacher</button>
+            <button class="btn-secondary" id="deleteTeacherBtn">Delete Teacher</button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- EDIT TEACHER MODAL -->
+  <div class="modal-overlay" id="editTeacherModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Edit Teacher</h2>
+        <button type="button" id="closeEditTeacher">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-field">
+          <label>First Name</label>
+          <input type="text" id="editFirstName" />
+        </div>
+
+        <div class="form-field">
+          <label>Last Name</label>
+          <input type="text" id="editLastName" />
+        </div>
+
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="editEmail" />
+        </div>
+      </div>
+
+      <div class="add-teacher-actions">
+        <button type="button" class="btn-secondary" id="cancelEditTeacher">Cancel</button>
+        <button type="button" class="btn-primary" id="saveEditTeacher">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS: Dummy data + Edit/Delete logic -->
+  <script>
+    let selectedTeacher = null;
+    let selectedRowElement = null;
+
+    let editModal;
+    let editFirstNameInput, editLastNameInput, editEmailInput;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      editModal = document.getElementById("editTeacherModal");
+      editFirstNameInput = document.getElementById("editFirstName");
+      editLastNameInput = document.getElementById("editLastName");
+      editEmailInput = document.getElementById("editEmail");
+
+      // Add Teacher panel aç/kapat
+      const openBtn = document.getElementById("openAddTeacher");
+      const panel = document.getElementById("addTeacherPanel");
+      const closeBtn = document.getElementById("closeAddTeacher");
+      const cancelBtn = document.getElementById("cancelAddTeacher");
+
+      openBtn.onclick = () => panel.classList.add("open");
+      closeBtn.onclick = () => panel.classList.remove("open");
+      cancelBtn.onclick = () => panel.classList.remove("open");
+
+      // Seçilebilir satırlar
+      const rows = document.querySelectorAll(".table-row");
+      rows.forEach(row => {
+        row.addEventListener("click", () => {
+          rows.forEach(r => r.classList.remove("selected"));
+          row.classList.add("selected");
+
+          selectedRowElement = row;
+          selectedTeacher = {
+            teacherId: row.dataset.teacherId,
+            firstName: row.dataset.firstName,
+            lastName: row.dataset.lastName,
+            email: row.dataset.email
+          };
+
+          console.log("Selected Teacher:", selectedTeacher);
+        });
+      });
+
+      // İlk satırı başlangıçta seçili kabul et
+      const initiallySelected = document.querySelector(".table-row.selected");
+      if (initiallySelected) {
+        selectedRowElement = initiallySelected;
+        selectedTeacher = {
+          teacherId: initiallySelected.dataset.teacherId,
+          firstName: initiallySelected.dataset.firstName,
+          lastName: initiallySelected.dataset.lastName,
+          email: initiallySelected.dataset.email
+        };
+      }
+
+      // Edit & Delete butonları
+      const editBtn = document.getElementById("editTeacherBtn");
+      const deleteBtn = document.getElementById("deleteTeacherBtn");
+
+      editBtn.addEventListener("click", openEditModal);
+      deleteBtn.addEventListener("click", deleteTeacher);
+
+      // Edit modal butonları
+      const closeEditBtn = document.getElementById("closeEditTeacher");
+      const cancelEditBtn = document.getElementById("cancelEditTeacher");
+      const saveEditBtn = document.getElementById("saveEditTeacher");
+
+      closeEditBtn.onclick = closeEditModal;
+      cancelEditBtn.onclick = closeEditModal;
+      saveEditBtn.onclick = saveTeacherChanges;
+
+      // Modal dışına tıklayınca kapat
+      editModal.addEventListener("click", (e) => {
+        if (e.target === editModal) {
+          closeEditModal();
+        }
+      });
+    });
+
+    // Edit modal aç
+    function openEditModal() {
+      if (!selectedTeacher) {
+        alert("Lütfen önce listeden bir öğretmen seç.");
+        return;
+      }
+
+      editFirstNameInput.value = selectedTeacher.firstName;
+      editLastNameInput.value = selectedTeacher.lastName;
+      editEmailInput.value = selectedTeacher.email || "";
+
+      editModal.classList.add("active");
+    }
+
+    // Edit modal kapat
+    function closeEditModal() {
+      editModal.classList.remove("active");
+    }
+
+    // PUT /api/teachers/{id} + UI update
+    async function saveTeacherChanges() {
+      if (!selectedTeacher) {
+        alert("Seçili öğretmen yok.");
+        return;
+      }
+
+      const updated = {
+        teacherId: selectedTeacher.teacherId,
+        firstName: editFirstNameInput.value,
+        lastName: editLastNameInput.value,
+        email: editEmailInput.value
+      };
+
+      try {
+        const res = await fetch(`https://localhost:7179/api/teachers/${updated.teacherId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(updated)
+        });
+
+        if (!res.ok) {
+          console.warn("Update failed (backend tarafını kontrol et).");
+        }
+
+        // UI tarafını güncelle
+        if (selectedRowElement) {
+          selectedRowElement.querySelector(".col-instructor").textContent =
+            `${updated.firstName} ${updated.lastName}`;
+          selectedRowElement.querySelector(".col-email").textContent = updated.email;
+
+          selectedRowElement.dataset.firstName = updated.firstName;
+          selectedRowElement.dataset.lastName = updated.lastName;
+          selectedRowElement.dataset.email = updated.email;
+        }
+
+        selectedTeacher = { ...selectedTeacher, ...updated };
+        closeEditModal();
+        alert("Teacher updated (UI). Backend için API'yi kontrol et.");
+      } catch (err) {
+        console.error(err);
+        alert("Error while updating teacher (fetch hatası).");
+      }
+    }
+
+    // DELETE /api/teachers/{id} + UI remove
+    async function deleteTeacher() {
+      if (!selectedTeacher || !selectedRowElement) {
+        alert("Lütfen önce listeden bir öğretmen seç.");
+        return;
+      }
+
+      const confirmDelete = confirm("Bu öğretmeni silmek istediğine emin misin?");
+      if (!confirmDelete) return;
+
+      try {
+        const res = await fetch(`https://localhost:7179/api/teachers/${selectedTeacher.teacherId}`, {
+          method: "DELETE"
+        });
+
+        if (!res.ok) {
+          console.warn("Delete failed (backend tarafını kontrol et).");
+        }
+
+        // UI'dan satırı kaldır
+        selectedRowElement.remove();
+        selectedTeacher = null;
+        selectedRowElement = null;
+
+        alert("Teacher deleted (UI). Backend için API'yi kontrol et.");
+      } catch (err) {
+        console.error(err);
+        alert("Error while deleting teacher (fetch hatası).");
+      }
+    }
+  </script>
+
+</body>
+</html>

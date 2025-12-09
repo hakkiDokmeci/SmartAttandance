@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Courses & Classrooms – Smart Attendance</title>
+  <link rel="stylesheet" href="courses.css" />
+
+  <!-- Modallar için ek CSS -->
+  <style>
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal {
+      width: 420px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      animation: fadeIn 0.25s ease-out;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal h3 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .modal-label {
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 14px;
+      display: block;
+      color: #444;
+    }
+
+    .modal-input {
+      width: 100%;
+      padding: 10px 14px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      gap: 10px;
+    }
+
+    .btn-cancel {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #e0e0e0;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-add {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: #a30569;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Seçili course satırı */
+    .course-row.selected {
+      background: #f4e3f1;
+    }
+  </style>
+</head>
+<body>
+  <div class="dash-root">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <img src="assets/maltepe_logo.png" alt="Maltepe University" class="sidebar-logo" />
+      </div>
+
+      <div class="sidebar-inner">
+        <div class="sidebar-title">Attendance System</div>
+
+        <nav class="sidebar-menu">
+          <a href="dashboard.html" class="menu-item">Dashboard</a>
+          <a href="teachers.html" class="nav-item">Teachers</a>
+          <a href="students.html" class="menu-item">Students</a>
+          <!-- Courses aktif -->
+          <a href="courses.html" class="menu-item active">Courses &amp; Classrooms</a>
+          <a href="cameras.html" class="menu-item">Cameras</a>
+          <a href="sessions.html" class="menu-item">Attendance Sessions</a>
+          <a href="reports.html" class="menu-item">Reports</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+      <!-- TOP BAR -->
+      <header class="topbar">
+        <h1 class="topbar-title">Courses &amp; Classrooms</h1>
+
+        <div class="topbar-right">
+          <div class="profile">
+            <div class="avatar-circle">
+              <span>T</span>
+            </div>
+            <span class="teacher-name">Teacher Name</span>
+          </div>
+          <button class="btn-logout">Logout</button>
+        </div>
+      </header>
+
+      <!-- CONTENT -->
+      <main class="content-wrapper">
+        <div class="content-card">
+
+          <!-- HEADER + FİLTRELER -->
+          <section class="page-header">
+            <div>
+              <h2>Course &amp; Classroom Management</h2>
+              <p>Define courses, assign classrooms and manage weekly schedules.</p>
+            </div>
+
+            <div class="header-controls">
+              <div class="select-pill">
+                <span>Semester: 2024–2025 Spring</span>
+                <span class="select-arrow">▾</span>
+              </div>
+              <!-- Add Course & Add Classroom -->
+              <button class="btn-outline-pink" id="openAddCourse">Add Course</button>
+              <button class="btn-grey" id="openAddClassroom">Add Classroom</button>
+            </div>
+          </section>
+
+          <!-- ANA GRID: SOL COURSES, SAĞ DETAILS -->
+          <div class="courses-grid">
+            <!-- SOL: COURSE LİSTESİ -->
+            <section class="course-list-card">
+              <header class="section-header">
+                <h3>Courses</h3>
+                <p>Your active courses for this semester.</p>
+              </header>
+
+              <!-- Arama -->
+              <div class="search-row">
+                <input
+                  type="text"
+                  class="search-input"
+                  placeholder="Search by course code or name..."
+                />
+              </div>
+
+              <!-- Tablo başlıkları -->
+              <div class="course-table-header">
+                <span class="col-code">Code</span>
+                <span class="col-name">Course Name</span>
+                <span class="col-classroom">Classroom</span>
+                <span class="col-sessions">Sessions/Week</span>
+              </div>
+
+              <!-- DUMMY COURSE SATIRLARI (DB alanları data-* içinde) -->
+              <div class="course-row course-row-active selected"
+                   data-course-id="1"
+                   data-course-code="CS101"
+                   data-course-name="Introduction to Programming"
+                   data-teacher-id="1">
+                <span class="col-code">CS101</span>
+                <span class="col-name">Introduction to Programming</span>
+                <span class="col-classroom">A-201</span>
+                <span class="col-sessions">2</span>
+              </div>
+
+              <div class="course-row"
+                   data-course-id="2"
+                   data-course-code="SE342"
+                   data-course-name="Software Validation & Testing"
+                   data-teacher-id="2">
+                <span class="col-code">SE342</span>
+                <span class="col-name">Software Validation &amp; Testing</span>
+                <span class="col-classroom">B-105</span>
+                <span class="col-sessions">1</span>
+              </div>
+
+              <div class="course-row"
+                   data-course-id="3"
+                   data-course-code="MAT102"
+                   data-course-name="Calculus II"
+                   data-teacher-id="3">
+                <span class="col-code">MAT102</span>
+                <span class="col-name">Calculus II</span>
+                <span class="col-classroom">Lab-1</span>
+                <span class="col-sessions">2</span>
+              </div>
+
+              <div class="course-row"
+                   data-course-id="4"
+                   data-course-code="AI220"
+                   data-course-name="Introduction to AI"
+                   data-teacher-id="1">
+                <span class="col-code">AI220</span>
+                <span class="col-name">Introduction to AI</span>
+                <span class="col-classroom">C-301</span>
+                <span class="col-sessions">1</span>
+              </div>
+            </section>
+
+            <!-- SAĞ: SEÇİLEN COURSE DETAY -->
+            <section class="course-detail-card">
+              <header class="section-header detail-header">
+                <div>
+                  <h3 id="detailTitle">Selected Course: CS101 – Introduction to Programming</h3>
+                  <p id="detailSubtitle">
+                    Teacher ID: 1 · Example info · Sessions / week & classroom are UI-only
+                  </p>
+                </div>
+                <div class="detail-actions">
+                  <button class="btn-grey-small" id="editCourseBtn">Edit Course</button>
+                  <button class="btn-red-small" id="removeCourseBtn">Remove</button>
+                </div>
+              </header>
+
+              <!-- Buradaki bloklar görsel, DB ile direkt bağlı değil, istersen sonra dinamik yaparız -->
+              <div class="detail-block">
+                <div class="block-header">
+                  <h4>Classroom Assignment</h4>
+                  <button class="link-button">Change Classroom</button>
+                </div>
+                <div class="assignment-pill">
+                  <span class="label">Primary Classroom</span>
+                  <span class="value" id="detailClassroom">A-201</span>
+                  <span class="meta">Capacity: 40 · Linked camera: CAM-01</span>
+                </div>
+              </div>
+
+              <div class="detail-block">
+                <div class="block-header">
+                  <h4>Weekly Schedule</h4>
+                  <button class="link-button">Edit Slots</button>
+                </div>
+
+                <div class="schedule-grid">
+                  <div class="day-col">
+                    <div class="day-label">Monday</div>
+                    <div class="slot-pill active">
+                      09:00–10:50 · A-201
+                    </div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Tuesday</div>
+                    <div class="slot-pill muted">No session</div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Wednesday</div>
+                    <div class="slot-pill active">
+                      13:00–13:50 · A-201
+                    </div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Thursday</div>
+                    <div class="slot-pill muted">No session</div>
+                  </div>
+                  <div class="day-col">
+                    <div class="day-label">Friday</div>
+                    <div class="slot-pill muted">No session</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="detail-block">
+                <div class="block-header">
+                  <h4>Enrollment Summary</h4>
+                  <button class="link-button">View Student List</button>
+                </div>
+
+                <div class="enrollment-row">
+                  <div class="enrollment-card">
+                    <span class="label">Enrolled Students</span>
+                    <span class="value">32</span>
+                  </div>
+                  <div class="enrollment-card">
+                    <span class="label">Max Capacity</span>
+                    <span class="value">40</span>
+                  </div>
+                  <div class="enrollment-card">
+                    <span class="label">Average Attendance</span>
+                    <span class="value highlight">92%</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- CLASSROOMS KARTI (ADD CLASSROOM İÇİN) -->
+          <section class="course-list-card" style="margin-top: 24px;">
+            <header class="section-header">
+              <h3>Classrooms</h3>
+              <p>Defined classrooms in the system.</p>
+            </header>
+
+            <div class="course-table-header">
+              <span class="col-code">Name</span>
+              <span class="col-name">Location</span>
+              <span class="col-classroom">Capacity</span>
+            </div>
+
+            <!-- Dummy classroom rows (AttendanceDB.Classrooms ile uyumlu alanlar) -->
+            <div class="course-row">
+              <span class="col-code">A-201</span>
+              <span class="col-name">Engineering Building – Floor 2</span>
+              <span class="col-classroom">40</span>
+            </div>
+
+            <div class="course-row">
+              <span class="col-code">B-105</span>
+              <span class="col-name">Main Building – Floor 1</span>
+              <span class="col-classroom">35</span>
+            </div>
+          </section>
+
+          <p class="tip-text">
+            Tip: Make sure each course has a valid classroom and schedule before creating attendance sessions.
+          </p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ADD COURSE MODAL (DB ile uyumlu: CourseCode, CourseName, TeacherId) -->
+  <div class="modal-overlay" id="addCourseModal">
+    <div class="modal">
+      <h3>Add New Course</h3>
+      <form method="post" action="https://localhost:7179/api/courses">
+        <label class="modal-label">Course Code</label>
+        <input class="modal-input" type="text" name="CourseCode" placeholder="e.g., CS101" />
+
+        <label class="modal-label">Course Name</label>
+        <input class="modal-input" type="text" name="CourseName" placeholder="e.g., Introduction to Programming" />
+
+        <!-- TeacherID – DB'deki Courses tablosunun foreign key alanı -->
+        <label class="modal-label">Teacher Id</label>
+        <input class="modal-input" type="number" name="TeacherId" placeholder="e.g., 1" />
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="closeAddCourseModal">Cancel</button>
+          <button type="submit" class="btn-add">Add Course</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EDIT COURSE MODAL (CourseCode, CourseName, TeacherId) -->
+  <div class="modal-overlay" id="editCourseModal">
+    <div class="modal">
+      <h3>Edit Course</h3>
+      <!-- JS ile doldurulacak, API'ye PUT atılacak -->
+      <label class="modal-label">Course Code</label>
+      <input class="modal-input" type="text" id="editCourseCode" />
+
+      <label class="modal-label">Course Name</label>
+      <input class="modal-input" type="text" id="editCourseName" />
+
+      <label class="modal-label">Teacher Id</label>
+      <input class="modal-input" type="number" id="editTeacherId" />
+
+      <div class="modal-buttons">
+        <button type="button" class="btn-cancel" id="closeEditCourseModal">Cancel</button>
+        <button type="button" class="btn-add" id="saveCourseChanges">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CLASSROOM MODAL (Name, Location, Capacity) -->
+  <div class="modal-overlay" id="addClassroomModal">
+    <div class="modal">
+      <h3>Add New Classroom</h3>
+      <form method="post" action="https://localhost:7179/api/classrooms">
+        <label class="modal-label">Name</label>
+        <input class="modal-input" type="text" name="Name" placeholder="e.g., A-201" />
+
+        <label class="modal-label">Location</label>
+        <input class="modal-input" type="text" name="Location" placeholder="e.g., Engineering Building – Floor 2" />
+
+        <label class="modal-label">Capacity</label>
+        <input class="modal-input" type="number" name="Capacity" placeholder="e.g., 40" />
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" id="closeAddClassroomModal">Cancel</button>
+          <button type="submit" class="btn-add">Add Classroom</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS: Modallar + seçili course + edit/remove -->
+  <script>
+    let selectedCourse = null;
+    let selectedCourseRow = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Course satırlarını seçilebilir yap
+      const courseRows = document.querySelectorAll(".course-row");
+      const detailTitle = document.getElementById("detailTitle");
+      const detailSubtitle = document.getElementById("detailSubtitle");
+
+      courseRows.forEach(row => {
+        row.addEventListener("click", () => {
+          courseRows.forEach(r => r.classList.remove("selected"));
+          row.classList.add("selected");
+
+          selectedCourseRow = row;
+          selectedCourse = {
+            courseId: row.dataset.courseId,
+            courseCode: row.dataset.courseCode,
+            courseName: row.dataset.courseName,
+            teacherId: row.dataset.teacherId
+          };
+
+          // Detay başlığını güncelle (basit)
+          detailTitle.textContent =
+            `Selected Course: ${selectedCourse.courseCode} – ${selectedCourse.courseName}`;
+          detailSubtitle.textContent =
+            `Teacher ID: ${selectedCourse.teacherId}`;
+        });
+      });
+
+      // İlk satır starting selected
+      const firstSelected = document.querySelector(".course-row.selected");
+      if (firstSelected) {
+        selectedCourseRow = firstSelected;
+        selectedCourse = {
+          courseId: firstSelected.dataset.courseId,
+          courseCode: firstSelected.dataset.courseCode,
+          courseName: firstSelected.dataset.courseName,
+          teacherId: firstSelected.dataset.teacherId
+        };
+      }
+
+      // ADD COURSE MODAL
+      const addCourseModal = document.getElementById("addCourseModal");
+      document.getElementById("openAddCourse").onclick = () => {
+        addCourseModal.style.display = "flex";
+      };
+      document.getElementById("closeAddCourseModal").onclick = () => {
+        addCourseModal.style.display = "none";
+      };
+      addCourseModal.onclick = (e) => {
+        if (e.target === addCourseModal) addCourseModal.style.display = "none";
+      };
+
+      // EDIT COURSE MODAL
+      const editCourseModal = document.getElementById("editCourseModal");
+      const editCourseCode = document.getElementById("editCourseCode");
+      const editCourseName = document.getElementById("editCourseName");
+      const editTeacherId = document.getElementById("editTeacherId");
+
+      document.getElementById("editCourseBtn").onclick = () => {
+        if (!selectedCourse) {
+          alert("Lütfen önce listeden bir course seç.");
+          return;
+        }
+        // Alanları doldur
+        editCourseCode.value = selectedCourse.courseCode;
+        editCourseName.value = selectedCourse.courseName;
+        editTeacherId.value = selectedCourse.teacherId;
+
+        editCourseModal.style.display = "flex";
+      };
+
+      document.getElementById("closeEditCourseModal").onclick = () => {
+        editCourseModal.style.display = "none";
+      };
+      editCourseModal.onclick = (e) => {
+        if (e.target === editCourseModal) editCourseModal.style.display = "none";
+      };
+
+      document.getElementById("saveCourseChanges").onclick = async () => {
+        if (!selectedCourse) {
+          alert("Seçili course yok.");
+          return;
+        }
+
+        const updated = {
+          courseId: selectedCourse.courseId,
+          courseCode: editCourseCode.value,
+          courseName: editCourseName.value,
+          teacherId: parseInt(editTeacherId.value, 10)
+        };
+
+        try {
+          const res = await fetch(`https://localhost:7179/api/courses/${updated.courseId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(updated)
+          });
+
+          if (!res.ok) {
+            console.warn("Update failed, backend'i kontrol et.");
+          }
+
+          // UI güncelle
+          if (selectedCourseRow) {
+            selectedCourseRow.dataset.courseCode = updated.courseCode;
+            selectedCourseRow.dataset.courseName = updated.courseName;
+            selectedCourseRow.dataset.teacherId = updated.teacherId;
+
+            selectedCourseRow.querySelector(".col-code").textContent = updated.courseCode;
+            selectedCourseRow.querySelector(".col-name").textContent = updated.courseName;
+          }
+
+          selectedCourse = { ...updated };
+          detailTitle.textContent =
+            `Selected Course: ${updated.courseCode} – ${updated.courseName}`;
+          detailSubtitle.textContent = `Teacher ID: ${updated.teacherId}`;
+
+          editCourseModal.style.display = "none";
+          alert("Course updated (UI). Backend için API'yi kontrol et.");
+        } catch (err) {
+          console.error(err);
+          alert("Error while updating course.");
+        }
+      };
+
+      // REMOVE COURSE
+      document.getElementById("removeCourseBtn").onclick = async () => {
+        if (!selectedCourse || !selectedCourseRow) {
+          alert("Lütfen önce listeden bir course seç.");
+          return;
+        }
+        const ok = confirm("Bu course'u silmek istediğine emin misin?");
+        if (!ok) return;
+
+        try {
+          const res = await fetch(`https://localhost:7179/api/courses/${selectedCourse.courseId}`, {
+            method: "DELETE"
+          });
+
+          if (!res.ok) {
+            console.warn("Delete failed, backend'i kontrol et.");
+          }
+
+          selectedCourseRow.remove();
+          selectedCourse = null;
+          selectedCourseRow = null;
+
+          detailTitle.textContent = "Selected Course: -";
+          detailSubtitle.textContent = "";
+          alert("Course deleted (UI). Backend için API'yi kontrol et.");
+        } catch (err) {
+          console.error(err);
+          alert("Error while deleting course.");
+        }
+      };
+
+      // ADD CLASSROOM MODAL
+      const addClassroomModal = document.getElementById("addClassroomModal");
+      document.getElementById("openAddClassroom").onclick = () => {
+        addClassroomModal.style.display = "flex";
+      };
+      document.getElementById("closeAddClassroomModal").onclick = () => {
+        addClassroomModal.style.display = "none";
+      };
+      addClassroomModal.onclick = (e) => {
+        if (e.target === addClassroomModal) addClassroomModal.style.display = "none";
+      };
+    });
+  </script>
+</body>
+</html>
